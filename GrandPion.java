@@ -1,19 +1,23 @@
 public GrandPion extend Pion{
 
-  public getScore(){
+  public int getScore(){
 
   }
-   public getDeplacement(coordDepartX int, coordDepartY int, coordArriveeX int,  coordArriveeY int){
+   public Liste getDeplacement(coordDepartX int, coordDepartY int, coordArriveeX int,  coordArriveeY int){
 
   }
 
-  protected getCheminVertical(coordDepartX int, coordDepartY int, coordArriveeX int,  coordArriveeY int){
+  protected Liste getCheminVertical(coordDepartX int, coordDepartY int, coordArriveeX int,  coordArriveeY int){
 
   }
-  protected getCheminVertical(coordDepartX int, coordDepartY int, coordArriveeX int,  coordArriveeY int){
+  protected Liste getCheminHorizontal(coordDepartX int, coordDepartY int, coordArriveeX int,  coordArriveeY int){
 
   }
-  protected getCheminVertical(coordDepartX int, coordDepartY int, coordArriveeX int,  coordArriveeY int){
+  protected Liste getCheminDiagonal(coordDepartX int, coordDepartY int, coordArriveeX int,  coordArriveeY int){
+
+  }
+
+  String toString(){
 
   }
 }

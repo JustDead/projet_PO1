@@ -1,14 +1,14 @@
 public PetitPion extend Pion{
 
-  public getScore(){
+  public int getScore(){
 
   }
-   public getDeplacement(coordDepartX int, coordDepartY int, coordArriveeX int,  coordArriveeY int){
+   public Liste getDeplacement(coordDepartX int, coordDepartY int, coordArriveeX int,  coordArriveeY int){
 
   }
 
-   public to String(){
-          
+   public String to String(){
+
    }
 
 }
