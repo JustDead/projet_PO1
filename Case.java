@@ -6,6 +6,7 @@ public class Case {
   public Case(Joueur j){
     this.libre=true;
     this.joueur = j;
+    this.pion = NULL;
   }
 
   public boolean estLibre(){
@@ -13,6 +14,17 @@ public class Case {
   }
 
   public void setPion(Pion p){
-    
+    this.pion = p;
+    this.libre = false;
+  }
+
+/* méthode qui sert à libérer la case (méthode ajoutée) */
+  public void freeCase(){
+    this.pion = NULL;
+    this.libre = true;
+  }
+
+  public Pion getPion(){
+    return this.pion;
   }
 }

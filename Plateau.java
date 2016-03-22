@@ -33,16 +33,16 @@ public class Plateau {
     this.cases[2][1].setPion(new PetitPion());
     this.cases[2][2].setPion(new PetitPion());
 
-    /*placement des pions du joueur 2 */
-    this.cases[3][7].setPion(new GrandPion());
-    this.cases[3][6].setPion(new GrandPion());
-    this.cases[2][7].setPion(new GrandPion());
-    this.cases[1][7].setPion(new MoyenPion());
-    this.cases[2][6].setPion(new MoyenPion());
-    this.cases[3][5].setPion(new MoyenPion());
-    this.cases[1][6].setPion(new PetitPion());
-    this.cases[1][5].setPion(new PetitPion());
-    this.cases[2][5].setPion(new PetitPion());
+    /*placement des pions du joueur 2 (Variable en fonction de la taille du plateau)*/
+    this.cases[this.tailleHorizontale-1][this.tailleVerticale-1].setPion(new GrandPion());
+    this.cases[this.tailleHorizontale-1][this.tailleVerticale-2].setPion(new GrandPion());
+    this.cases[this.tailleHorizontale-2][this.tailleVerticale-1].setPion(new GrandPion());
+    this.cases[this.tailleHorizontale-3][this.tailleVerticale-1].setPion(new MoyenPion());
+    this.cases[this.tailleHorizontale-2][this.tailleVerticale-2].setPion(new MoyenPion());
+    this.cases[this.tailleHorizontale-1][this.tailleVerticale-3].setPion(new MoyenPion());
+    this.cases[this.tailleHorizontale-3][this.tailleVerticale-2].setPion(new PetitPion());
+    this.cases[this.tailleHorizontale-3][this.tailleVerticale-3].setPion(new PetitPion());
+    this.cases[this.tailleHorizontale-2][this.tailleVerticale-3].setPion(new PetitPion());
   }
 
   public String toString(){

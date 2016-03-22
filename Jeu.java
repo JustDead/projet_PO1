@@ -7,6 +7,10 @@ public class Jeu {
     this.initialiserPlateau(x,y,this.joueurs[0],this.joueurs[1]);
   }
 
+  public Jeu(String j1, String j2){
+    this(4,8,j1,j2);
+  }
+
   public void initialiserPlateau(int x, int y, Joueur j1, Joueur j2){
     this.plateau = new Plateau(x,y,j1,j2);
   }
@@ -30,7 +34,11 @@ public class Jeu {
   }
 
   public Joueur joueurVainqueur(){
-
+    if(this.joueurs[0].getScore()>this.joueurs[1].getScore()){
+      return this.joueurs[0];
+    }else{
+      return this.joueurs[1];
+    }
   }
 
   public boolean arretPartie(){
