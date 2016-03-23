@@ -16,7 +16,9 @@ public class Jeu {
   }
 
   public void jouer(Joueur j){
-
+    while(!this.arretPartie()){
+      
+    }
   }
 
   private void initialiserJoueur(String j1, String j2) {
@@ -42,7 +44,11 @@ public class Jeu {
   }
 
   public boolean arretPartie(){
-
+    if((this.joueurs[0].getNbPionsCaptures()+this.joueurs[1].getNbPionsCaptures())==17){
+      return true;
+    }else{
+      return false;
+    }
   }
 
   public String toString(){

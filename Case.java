@@ -27,4 +27,23 @@ public class Case {
   public Pion getPion(){
     return this.pion;
   }
+
+  public String toString(){
+    String s = "";
+    switch (this.pion.getScore()){
+      case 1:
+        s = "P";
+        break;
+      case 2:
+        s = "M";
+        break;
+      case 3:
+        s = "G";
+        break;
+      default:
+        s = " ";
+        break;
+    }
+    return s;
+  }
 }

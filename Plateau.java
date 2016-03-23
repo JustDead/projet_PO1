@@ -11,13 +11,13 @@ public class Plateau {
   }
 
   public void initialiser(Joueur j1, Joueur j2){
-    for(int j=0; j<(this.tailleVerticale/2); j++){
-      for(int i=0; i<this.tailleHorizontale; i++){
+    for(int i=0; i<(this.tailleVerticale/2); i++){
+      for(int j=0; j<this.tailleHorizontale; j++){
         this.cases[i][j] = new Case(j1);
       }
     }
-    for(int j=(this.tailleVerticale/2); j<this.tailleVerticale; j++){
-      for(int i=0; i<this.tailleHorizontale; i++){
+    for(int i=(this.tailleVerticale/2); i<this.tailleVerticale; i++){
+      for(int j=0; j<this.tailleHorizontale; j++){
         this.cases[i][j] = new Case(j2);
       }
     }
@@ -46,6 +46,29 @@ public class Plateau {
   }
 
   public String toString(){
-
+    String s = "";
+    for(int i=0; i<this.tailleVerticale; i++){
+      for(int j=0; j<this.tailleHorizontale; j++){
+        s += "=====";
+      }
+      s += "\n";
+      for(int j=0; j<this.tailleHorizontale; j++){
+        s += "|   |";
+      }
+      s += "\n";
+      for(int j=0; j<this.tailleHorizontale; j++){
+        s += "| " + this.cases[i][j] + " |";
+      }
+      s += "\n";
+      for(int j=0; j<this.tailleHorizontale; j++){
+        s += "|   |";
+      }
+      s += "\n";
+      for(int j=0; j<this.tailleHorizontale; j++){
+        s += "=====";
+      }
+      s += "\n";
+    }
+    return s;
   }
 }
