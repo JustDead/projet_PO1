@@ -1,0 +1,18 @@
+On commence par créer la table EMPLOYE_ALERTE en faisant :
+create table EMPLOYE_ALERTE as select * from EMPLOYE;
+delete from EMPLOYE_ALERTE where salaire>0;
+Elle aura les mêmes attributs que employe, cependant on la videra afin qu'elle soit vierge pour la
+remplir avec notre trigger.
+create or replace trigger employe_big_salaire after insert or update on employe for each row
+begin
+if(:New.salaire>5000)
+then
+insert into EMPLOYE_ALERTE values
+(:New.nuempl,:New.nomempl,:New.hebdo,:New.affect,:New.salaire);
+end if;
+end;
+insert into service values (15,'unauteservice',999);
+insert into employe values (999,'labrute',30,15,6000);
+select * from EMPLOYE_ALERTE;
+Cette succession de requête ajoutera à la table EMPLOYE_ALERTE l'employé 999 car il a un
+salaire de 6000 .
