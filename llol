@@ -1,18 +1,51 @@
-On commence par créer la table EMPLOYE_ALERTE en faisant :
-create table EMPLOYE_ALERTE as select * from EMPLOYE;
-delete from EMPLOYE_ALERTE where salaire>0;
-Elle aura les mêmes attributs que employe, cependant on la videra afin qu'elle soit vierge pour la
-remplir avec notre trigger.
-create or replace trigger employe_big_salaire after insert or update on employe for each row
+create or replace PROCEDURE creer_service
+(le_nuserv in NUMBER, le_nomserv in VARCHAR2, le_chef in NUMBER) is
 begin
-if(:New.salaire>5000)
-then
-insert into EMPLOYE_ALERTE values
-(:New.nuempl,:New.nomempl,:New.hebdo,:New.affect,:New.salaire);
-end if;
+  set transaction read write;
+  insert into service values(le_nuserv,le_nomserv,le_chef);
+  update employe set affect=le_nuserv where nuempl=le_chef;
+  commit;
+exception
+  when others then
+  if SQLCode=-00001 then rollback;
+    RAISE_APPLICATION_ERROR(-20000, 'Il ne peut pas y avoir deux services avec le même numéro');
+  elsif SQLCode=-02091 then rollback;
+    RAISE_APPLICATION_ERROR(-20001, 'L employe n existe pas');
+  elsif SQLCode=-01438 then rollback;
+    RAISE_APPLICATION_ERROR(-20002, 'Nombre plus grand que prévu !');
+  elsif SQLCode=-12899 then rollback;
+    RAISE_APPLICATION_ERROR(-20003, 'Trop grand nom :(');
+  elsif SQLCode=-20010 then rollback;
+    RAISE_APPLICATION_ERROR(-20007, 'Le salaire d un chef ne peux pas être infèrieur à celui des employés');
+  end if;
 end;
-insert into service values (15,'unauteservice',999);
-insert into employe values (999,'labrute',30,15,6000);
-select * from EMPLOYE_ALERTE;
-Cette succession de requête ajoutera à la table EMPLOYE_ALERTE l'employé 999 car il a un
-salaire de 6000 .
+
+
+
+
+create or replace PROCEDURE creer_projet
+(le_nuproj in NUMBER, le_nomproj in VARCHAR2, le_resp in NUMBER, la_duree in NUMBER) is
+begin
+  set transaction read write;
+  insert into projet values(le_nuproj,le_nomproj,le_resp);
+  insert into travail values(le_resp,le_nuproj,la_duree);
+  commit;
+exception
+  when others then
+  if SQLCode=-00001 then rollback;
+    raise_application_error(-20000,'Il ne peut aps y avoir deux associations pareilles');
+  elsif SQLCode=-02291 then rollback;
+    raise_application_error(-20001,'L employe ou le service n existe pas');
+  elsif SQLCode=-12899 then rollback;
+    raise_application_error(-20002,'Trop grand nom :(');
+  elsif SQLCode=-02290 then rollback;
+    raise_application_error(-20003,'Un employé ne peut aps travailler plus de 35h !');
+  elsif SQLCode=-20003 then rollback;
+    raise_application_error(-20004,'UN employé ne peux pas être responsable de plus de 3 projets !');
+  elsif SQLCode=-20010 then rollback;
+    raise_application_error(-20005,'UN responsable de projet ne peux pas avoir un plus petit salaire qu un employé');
+  elsif SQLCode=-20008 then rollback;
+    raise_application_error(-20006,'UN responsable de projet ne peux aps avoir un plus grand salaire qu un chef de service');
+  end if;
+end;
+  
