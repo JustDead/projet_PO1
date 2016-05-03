@@ -1,3 +1,80 @@
+TD4 : Base de données
+
+Exercice 1
+
+Test
+Code erreur oracle
+Messages d'erreurs
+PK
+-00001
+unique constraint (%s.%s) violated
+FK_AFFECT
+-02291
+integrity constraint (%s.%s) violated - parent key not found
+Taille d'un attribut > NUMBER(4,0)
+-01438
+value larger than specified precision allowed for this column
+Taille d'un attribut > CHAR(20 BYTE)
+-12899
+value too large for column %s (actual: %s, maximum: %s)
+Check hebdo<=35
+-02290
+check constraint (%s.%s) violated
+Salaire_Resp_Empl
+-20006
+salaire employé>salaire resp
+
+Creer_employe :
+	entree : le_nuempl NUMBER, le_nomempl VARCHAR2, le_hebdo NUMBER, le_affect NUMBER, le_salaire NUMBER
+	sortie : rien
+	requête : insert into employe values (le_nuempl,le_nomempl,le_hebdo,le_affect,le_salaire)
+	erreur : voir a)
+
+create or replace PROCEDURE creer_employe
+(le_nuempl in NUMBER, le_nomempl in VARCHAR2, le_hebdo in NUMBER, le_affect in NUMBER, le_salaire in NUMBER) is
+begin
+  set transaction read write;
+  insert into employe values (le_nuempl,le_nomempl,le_hebdo,le_affect,le_salaire);
+  commit;
+exception
+  when others then
+  if SQLCode=-00001 then rollback;
+    raise_application_error(-20000,'Il ne peut pas y avoir deux employés avec le même numéro');
+  elsif SQLCode=-02291 then rollback;
+    raise_application_error(-20001,'Le service n existe pas');
+  elsif SQLCode=-01438 then rollback;
+    raise_application_error(-20002,'Nombre plus grand que prévu !');
+  elsif SQLCode=-12899 then rollback;
+    raise_application_error(-20003,'Trop grand nom :(');
+  elsif SQLCode=-02290 then rollback;
+    raise_application_error(-20004,'Un employé ne peut pas travailler plus de 35h !');
+  elsif SQLCode=-20006 then rollback;
+    raise_application_error(-20005,'Le salaire d un employé ne pas pas être plus grand que celui de son chef !');
+  end if;
+end;
+Exercice 2
+
+Service
+
+Test
+Code erreur oracle
+Message d'erreur
+Un numéro de service déjà utilisé
+-00001
+Il ne peut pas y avoir deux services avec le même numéro
+Un employé qui n'existe pas
+-02091
+L employe n existe pas
+Taille d'un attribut > NUMBER(4,0)
+-01438
+Nombre plus grand que prévu !
+Taille d'un attribut > CHAR(20 BYTE)
+-12899
+Trop grand nom :(
+Salaire d'un chef plus petit que celui des employés
+-20010
+Le salaire d un chef ne peux pas être inférieur à celui des employés
+
 create or replace PROCEDURE creer_service
 (le_nuserv in NUMBER, le_nomserv in VARCHAR2, le_chef in NUMBER) is
 begin
@@ -16,11 +93,36 @@ exception
   elsif SQLCode=-12899 then rollback;
     RAISE_APPLICATION_ERROR(-20003, 'Trop grand nom :(');
   elsif SQLCode=-20010 then rollback;
-    RAISE_APPLICATION_ERROR(-20007, 'Le salaire d un chef ne peux pas être infèrieur à celui des employés');
+    RAISE_APPLICATION_ERROR(-20007, 'Le salaire d un chef ne peux pas être inférieur à celui des employés');
   end if;
 end;
 
+Projet
 
+Test
+Code erreur oracle
+Message
+Le numéro de projet est déjà utilisé
+-00001
+Il ne peut pas y avoir deux projet avec le même numéro' 
+L'employé ou le service n'existe pas
+-02291
+L'employé ou le service n'existe pas
+Taille d'un attribut > CHAR(20 BYTE)
+-12899
+Trop grand nom :(
+L'employé travail plus que son nombre d'heure hebdo
+-02290
+Un employé ne peut pas travailler plus que son nombre d heure hebdo !
+L'employé est déjà responsable de 3 projets
+-20003
+Un employé ne peut pas être responsable de plus de 3 projets 
+Le responsable de projet a un plus petit salaire que les employés
+-20005
+Un responsable de projet ne peux pas avoir un plus petit salaire qu un employé
+Le responsable de projet a un plus grand salaire que les chef de services
+-20008
+Un responsable de projet ne peux pas avoir un plus grand salaire qu un chef de service
 
 
 create or replace PROCEDURE creer_projet
@@ -33,19 +135,110 @@ begin
 exception
   when others then
   if SQLCode=-00001 then rollback;
-    raise_application_error(-20000,'Il ne peut aps y avoir deux associations pareilles');
+    raise_application_error(-20000,'Il ne peut pas y avoir deux projet avec le même numéro');
   elsif SQLCode=-02291 then rollback;
     raise_application_error(-20001,'L employe ou le service n existe pas');
   elsif SQLCode=-12899 then rollback;
     raise_application_error(-20002,'Trop grand nom :(');
   elsif SQLCode=-02290 then rollback;
-    raise_application_error(-20003,'Un employé ne peut aps travailler plus de 35h !');
+    raise_application_error(-20003,'Un employé ne peut pas travailler plus que son nombre d heure hebdo !');
   elsif SQLCode=-20003 then rollback;
-    raise_application_error(-20004,'UN employé ne peux pas être responsable de plus de 3 projets !');
+    raise_application_error(-20004,'Un employé ne peux pas être responsable de plus de 3 projets !');
   elsif SQLCode=-20010 then rollback;
-    raise_application_error(-20005,'UN responsable de projet ne peux pas avoir un plus petit salaire qu un employé');
+    raise_application_error(-20005,'Un responsable de projet ne peux pas avoir un plus petit salaire qu un employé');
   elsif SQLCode=-20008 then rollback;
-    raise_application_error(-20006,'UN responsable de projet ne peux aps avoir un plus grand salaire qu un chef de service');
+    raise_application_error(-20006,'Un responsable de projet ne peux pas avoir un plus grand salaire qu un chef de service');
   end if;
 end;
-  
+
+Travail
+
+########
+
+
+
+Exercice 3
+
+
+
+Il ne faut pas oublier le cas où l'objet que l'on recherche et que l'on souhaite effacer n'est pas dans la table préciser.
+
+Exercice 4
+
+modification_hebdo
+
+Test
+Code erreur oracle
+Message d'erreur
+Le nouveau nombre d'heure hebdo dépasse 35
+-02290
+Le nombre d heure hebdo ne peux pas dépassé 35h
+Le nouveau nombre d'heure hebdo est plus grand que l'ancien
+-20001
+Le nombre d heure hebdo ne peut pas être augmenté
+On diminue le nombre d'heure hebdo et la somme des durées de travail est donc supérieure à celle-ci
+-20002
+La somme des durees de travail ne peut pas dépasser hebdo
+Taille d'un attribut > NUMBER(4,0)
+-01438
+Nombre plus grand que prévu !
+
+Plus on gérera le cas où l'employé n'est pas présent dans la table avec SQL%notdfound
+
+create or replace PROCEDURE modification_hebdo
+(le_nuempl in NUMBER, le_hebdo in NUMBER) is
+Pas_Employe Exception;
+begin
+  update employe set hebdo=le_hebdo where nuempl=le_nuempl;
+  if (SQL%notfound) then raise Pas_Employe;
+  end if;
+  commit;
+exception
+  when Pas_Employe then raise_application_error(-20000,'L employe n existe pas');
+  when others then
+  if SQLCode=-02290 then rollback;
+    RAISE_APPLICATION_ERROR(-20001, 'Le nombre d heure hebdo ne peux pas dépassé 35h');
+  elsif SQLCode=-20001 then rollback;
+    RAISE_APPLICATION_ERROR(-20002, 'Le nombre d heure hebdo ne peut pas etre augmenté');
+  elsif SQLCode=-20002 then rollback;
+    RAISE_APPLICATION_ERROR(-20003, 'La somme des durees de travail ne peut pas dépasser hebdo');
+  elsif SQLCode=-01438 then rollback;
+    raise_application_error(-20004,'Nombre plus grand que prévu !');
+  end if;
+end;
+
+
+
+
+
+modification_duree
+
+Test
+Code erreur oracle
+Message d'erreur
+Taille d'un attribut > NUMBER(4,0)
+-01438
+Nombre plus grand que prévu !
+La somme des durées de travail d'un employé dépasse son nombre d'heure hebdo
+-20002
+La somme des durees de travail ne peut pas dépasser hebdo
+
+Plus on gérera le cas où l'employé ou le projet n'est pas présent dans leur table avec SQL%notdfound
+
+create or replace PROCEDURE modification_duree
+(le_nuempl in NUMBER, le_nuproj in NUMBER, la_duree in NUMBER) is
+Pas_Travail Exception;
+begin
+  update travail set duree=la_duree where nuempl=le_nuempl and nuproj=le_nuproj;
+  if (SQL%notfound) then raise Pas_Travail;
+  end if;
+  commit;
+exception
+  when Pas_Travail then raise_application_error(-20000,'Le travail n existe pas(Nuempl ou Nuproj ensemble ou n existant pas)');
+  when others then
+  if SQLCode=-20002 then rollback;
+    RAISE_APPLICATION_ERROR(-20001, 'La somme des durees de travail ne peut pas dépasser hebdo');
+  elsif SQLCode=-01438 then rollback;
+    raise_application_error(-20002,'Nombre plus grand que prévu !');
+  end if;
+end;
